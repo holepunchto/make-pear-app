@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: RaisinTen/make-pear-app
+      - uses: holepunchto/make-pear-app
 ```
 
 ### macOS
@@ -55,7 +55,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: RaisinTen/make-pear-app
+      - uses: holepunchto/make-pear-app
         with:
           macos_certificate_base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE }}
           macos_p12_password: ${{ secrets.APPLE_P12_PASSWORD }}
@@ -75,7 +75,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - uses: RaisinTen/make-pear-app
+      - uses: holepunchto/make-pear-app
         with:
           windows_subject: ${{ secrets.WIN_SUBJECT }}
           windows_thumbprint: ${{ secrets.WIN_THUMBPRINT }}
