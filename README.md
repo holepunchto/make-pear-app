@@ -1,4 +1,4 @@
-# Make Pear Apps
+# Make Pear Apps :pear:
 
 GitHub Action to build Pear apps on Linux, macOS, and Windows, with code signing and artifact upload.
 
