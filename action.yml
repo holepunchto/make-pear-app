@@ -2,60 +2,60 @@ name: 'Make Pear Apps'
 description: 'Action for making Pear apps'
 inputs:
   build_certificate_base64:
-    description: "Base64 Apple distribution certificate"
+    description: 'Base64 Apple distribution certificate'
     required: false
-    default: ""
+    default: ''
   p12_password:
-    description: "Password for Apple certificate"
+    description: 'Password for Apple certificate'
     required: false
-    default: ""
+    default: ''
   build_provision_profile_base64:
-    description: "Base64 Apple provisioning profile"
+    description: 'Base64 Apple provisioning profile'
     required: false
-    default: ""
+    default: ''
   keychain_password:
-    description: "Temporary keychain password"
+    description: 'Temporary keychain password'
     required: false
-    default: ""
+    default: ''
   apikey_base64:
-    description: "Base64 Apple API key"
+    description: 'Base64 Apple API key'
     required: false
-    default: ""
+    default: ''
   apikey_id:
-    description: "Apple API Key ID"
+    description: 'Apple API Key ID'
     required: false
-    default: ""
+    default: ''
   apikey_issuer:
-    description: "Apple API Key issuer ID"
+    description: 'Apple API Key issuer ID'
     required: false
-    default: ""
+    default: ''
   macos_codesign_identity:
-    description: "macOS codesign identity"
+    description: 'macOS codesign identity'
     required: false
-    default: ""
+    default: ''
   win_subject:
-    description: "Windows code signing certificate subject"
+    description: 'Windows code signing certificate subject'
     required: false
-    default: ""
+    default: ''
   win_thumbprint:
-    description: "Thumbprint of the Windows code signing certificate"
+    description: 'Thumbprint of the Windows code signing certificate'
     required: false
-    default: ""
+    default: ''
 runs:
   using: composite
   steps:
     - uses: actions/setup-node@v4
-    - name: Install dependencies (Linux/macOS)
+    - name: 'Install dependencies (Linux/macOS)'
       if: ${{ runner.os != 'Windows' }}
       run: |
         npm install
       shell: bash
-    - name: Install dependencies (Windows)
+    - name: 'Install dependencies (Windows)'
       if: ${{ runner.os == 'Windows' }}
       run: |
         npm install
       shell: pwsh
-    - name: Install the Apple certificate and provisioning profile
+    - name: 'Install the Apple certificate and provisioning profile'
       if: ${{ runner.os == 'macOS' }}
       run: |
         # create variables
@@ -80,45 +80,45 @@ runs:
         security list-keychain -d user -s $KEYCHAIN_PATH
 
         # add notarytool credentials
-        xcrun notarytool store-credentials "notary" --key "$APIKEY_PATH" --key-id ${{ inputs.apikey_id }} --issuer ${{ inputs.apikey_issuer }}
+        xcrun notarytool store-credentials 'notary' --key "$APIKEY_PATH" --key-id "${{ inputs.apikey_id }}" --issuer "${{ inputs.apikey_issuer }}"
 
         # apply provisioning profile
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
       shell: bash
-    - name: Build application (Linux)
+    - name: 'Build application (Linux)'
       if: ${{ runner.os == 'Linux' }}
       run: |
         npm run make
       shell: bash
-    - name: Build application (macOS)
+    - name: 'Build application (macOS)'
       if: ${{ runner.os == 'macOS' }}
       env:
-        MAC_CODESIGN_IDENTITY: ${{ inputs.macos_codesign_identity }}
+        MAC_CODESIGN_IDENTITY: "${{ inputs.macos_codesign_identity }}"
       run: |
         npm run make
       shell: bash
-    - name: Build application (Windows)
+    - name: 'Build application (Windows)'
       if: ${{ runner.os == 'Windows' }}
       env:
-        WIN_SUBJECT: ${{ inputs.win_subject }}
-        WIN_THUMBPRINT: ${{ inputs.win_thumbprint }}
+        WIN_SUBJECT: "${{ inputs.win_subject }}"
+        WIN_THUMBPRINT: "${{ inputs.win_thumbprint }}"
       run: |
         npm run make
       shell: pwsh
-    - name: "Install @actions/artifact module (Linux/macOS)"
+    - name: 'Install @actions/artifact module (Linux/macOS)'
       if: ${{ runner.os != 'Windows' }}
       run: |
         npm install @actions/artifact@2.3.2 --global
         echo "NODE_PATH=$(npm root --quiet -g)" >> $GITHUB_ENV
-    - name: "Install @actions/artifact module (Windows)"
+    - name: 'Install @actions/artifact module (Windows)'
       if: ${{ runner.os == 'Windows' }}
       run: |
         npm install @actions/artifact@2.3.2 --global
         $npmRoot = npm root --quiet -g
         Add-Content -Path $env:GITHUB_ENV -Value "NODE_PATH=$npmRoot"
       shell: pwsh
-    - name: "Extract Actions runtime variables" 
+    - name: 'Extract Actions runtime variables'
       uses: actions/github-script@v7
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -127,9 +127,9 @@ runs:
           core.exportVariable('ACTIONS_RESULTS_URL', process.env['ACTIONS_RESULTS_URL'])
           core.exportVariable('ACTIONS_RUNTIME_URL', process.env['ACTIONS_RUNTIME_URL'])
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env['ACTIONS_RUNTIME_TOKEN'])
-    - name: Upload folders as artifacts
+    - name: 'Upload folders as artifacts'
       env:
-        NODE_PATH: ${{ env.NODE_PATH }}
+        NODE_PATH: "${{ env.NODE_PATH }}"
       run: |
         const fs = require('fs');
         const path = require('path');
@@ -137,10 +137,10 @@ runs:
 
         const artifact = new DefaultArtifactClient()
 
-        function listFilesRecursive (dir) {
+        function listFilesRecursive(dir) {
           let results = []
           const list = fs.readdirSync(dir)
-          list.forEach(function (file) {
+          list.forEach(function(file) {
             const filePath = path.join(dir, file)
             const stat = fs.statSync(filePath)
             if (stat && stat.isDirectory()) {
