@@ -6,7 +6,8 @@ inputs:
     required: true
   upgrade_key:
     description: 'Upgrade key'
-    required: true
+    required: false
+    default: ''
   macos_certificate_base64:
     description: 'Base64-encoded Apple distribution certificate (P12 format)'
     required: false
