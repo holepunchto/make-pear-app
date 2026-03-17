@@ -101,7 +101,7 @@ runs:
       if: ${{ runner.os == 'Linux' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
-        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key != '' && inputs.upgrade_key || null }}"
       run: |
         npm run make
       shell: bash
@@ -109,7 +109,7 @@ runs:
       if: ${{ runner.os == 'macOS' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
-        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key != '' && inputs.upgrade_key || null }}"
         MAC_CODESIGN_IDENTITY: "${{ inputs.macos_codesign_identity }}"
       run: |
         npm run make
@@ -118,7 +118,7 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
-        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key != '' && inputs.upgrade_key || null }}"
         WIN_SUBJECT: "${{ inputs.windows_subject }}"
         WIN_THUMBPRINT: "${{ inputs.windows_thumbprint }}"
       run: |
