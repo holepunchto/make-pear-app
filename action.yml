@@ -4,6 +4,9 @@ inputs:
   channel:
     description: 'Channel name'
     required: true
+  upgrade_key:
+    description: 'Upgrade key'
+    required: true
   macos_certificate_base64:
     description: 'Base64-encoded Apple distribution certificate (P12 format)'
     required: false
@@ -97,6 +100,7 @@ runs:
       if: ${{ runner.os == 'Linux' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
       run: |
         npm run make
       shell: bash
@@ -104,6 +108,7 @@ runs:
       if: ${{ runner.os == 'macOS' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
         MAC_CODESIGN_IDENTITY: "${{ inputs.macos_codesign_identity }}"
       run: |
         npm run make
@@ -112,6 +117,7 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       env:
         CHANNEL: "${{ inputs.channel }}"
+        UPGRADE_KEY: "${{ inputs.upgrade_key }}"
         WIN_SUBJECT: "${{ inputs.windows_subject }}"
         WIN_THUMBPRINT: "${{ inputs.windows_thumbprint }}"
       run: |

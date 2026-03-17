@@ -9,6 +9,7 @@ GitHub Action to build Pear apps on Linux, macOS, and Windows, with code signing
 | Input | Description | Required |
 |-------|------------|----------|
 | `channel` | Channel name (e.g. `preview`, `experimental`, `staging`) | Yes |
+| `upgrade_key` | Upgrade key (e.g. `pear://jj7jywoj83pswtcf5asywbm4ngro3xikgg1zcaqq3kdyhghats6o`) | Yes |
 
 ### macOS
 
