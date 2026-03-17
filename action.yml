@@ -16,10 +16,6 @@ inputs:
     description: 'Base64-encoded macOS provisioning profile (.provisionprofile)'
     required: false
     default: ''
-  macos_keychain_password:
-    description: 'Temporary password for the macOS keychain'
-    required: false
-    default: ''
   macos_api_key_base64:
     description: 'Base64-encoded Apple API key (.p8) for notarization'
     required: false
@@ -58,7 +54,6 @@ runs:
         [ -z "${{ inputs.macos_certificate_base64 }}" ] && MISSING="$MISSING macos_certificate_base64"
         [ -z "${{ inputs.macos_p12_password }}" ] && MISSING="$MISSING macos_p12_password"
         [ -z "${{ inputs.macos_provisioning_profile_base64 }}" ] && MISSING="$MISSING macos_provisioning_profile_base64"
-        [ -z "${{ inputs.macos_keychain_password }}" ] && MISSING="$MISSING macos_keychain_password"
         [ -z "${{ inputs.macos_api_key_base64 }}" ] && MISSING="$MISSING macos_api_key_base64"
         [ -z "${{ inputs.macos_api_key_id }}" ] && MISSING="$MISSING macos_api_key_id"
         [ -z "${{ inputs.macos_api_key_issuer }}" ] && MISSING="$MISSING macos_api_key_issuer"
@@ -105,6 +100,7 @@ runs:
         PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
         APIKEY_PATH=$RUNNER_TEMP/AuthKey.p8
+        KEYCHAIN_PASSWORD=keychain-password
 
         # import certificate and provisioning profile from secrets
         echo -n "${{ inputs.macos_certificate_base64 }}" | base64 --decode -o $CERTIFICATE_PATH
@@ -112,13 +108,13 @@ runs:
         echo -n "${{ inputs.macos_api_key_base64 }}" | base64 --decode -o $APIKEY_PATH
 
         # create temporary keychain
-        security create-keychain -p "${{ inputs.macos_keychain_password }}" $KEYCHAIN_PATH
+        security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-        security unlock-keychain -p "${{ inputs.macos_keychain_password }}" $KEYCHAIN_PATH
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
         # import certificate to keychain
         security import $CERTIFICATE_PATH -P "${{ inputs.macos_p12_password }}" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-        security set-key-partition-list -S apple-tool:,apple: -k "${{ inputs.macos_keychain_password }}" $KEYCHAIN_PATH
+        security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         security list-keychain -d user -s $KEYCHAIN_PATH
 
         # add notarytool credentials
