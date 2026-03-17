@@ -43,7 +43,7 @@ inputs:
 outputs:
   artifact-links:
     description: 'Links to uploaded artifacts'
-    value: ${{ steps.upload-artifacts-bash.outputs.artifact_links || steps.upload-artifacts-pwsh.outputs.artifact_links }}
+    value: ${{ steps.upload-artifacts-bash.outputs.artifact-links || steps.upload-artifacts-pwsh.outputs.artifact-links }}
 runs:
   using: composite
   steps:

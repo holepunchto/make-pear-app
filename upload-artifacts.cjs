@@ -44,7 +44,7 @@ async function main () {
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(
       process.env.GITHUB_OUTPUT,
-      `artifact_links<<EOF\n${artifactLinks.join('\n')}\nEOF\n`
+      `artifact-links<<EOF\n${artifactLinks.join('\n')}\nEOF\n`
     )
   }
 }
