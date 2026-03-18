@@ -66,8 +66,8 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       run: |
         $missing = @()
-        if ([string]::IsNullOrEmpty("${{ inputs.windows_subject }}")) { $missing += "windows_subject" }
-        if ([string]::IsNullOrEmpty("${{ inputs.windows_thumbprint }}")) { $missing += "windows_thumbprint" }
+        if ([string]::IsNullOrEmpty('${{ inputs.windows_subject }}')) { $missing += "windows_subject" }
+        if ([string]::IsNullOrEmpty('${{ inputs.windows_thumbprint }}')) { $missing += "windows_thumbprint" }
         if ($missing.Count -gt 0) {
           Write-Error "Error: Missing Windows inputs: $($missing -join ', ')"
           exit 1
