@@ -199,10 +199,11 @@ runs:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CHANNEL: "${{ inputs.channel }}"
         UPGRADE_KEY: "${{ inputs.upgrade_key != '' && inputs.upgrade_key || null }}"
+        NODE_ENV: production
         WIN_SUBJECT: "${{ inputs.windows_subject }}"
         WIN_THUMBPRINT: "${{ inputs.windows_thumbprint }}"
       run: |
-        npm run make
+        npx electron-forge make
       shell: pwsh
     - name: 'Install @actions/artifact module (Linux/macOS)'
       if: ${{ runner.os != 'Windows' }}
